@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedLanguage = languageSelect.value;
         elementsToTranslate.forEach(element => {
             const key = element.getAttribute('data-translate');
-            translateText(key, selectedLanguage)
+            const textToTranslate = element.textContent;
+            translateText(textToTranslate, selectedLanguage)
                 .then(translatedText => {
                     element.textContent = translatedText;
                 })
@@ -16,10 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to translate text using Google Translate API
     async function translateText(text, targetLanguage) {
-        const response = await fetch(`https://translation.googleapis.com/language/translate/v2?key=YOUR_API_KEY&target=${targetLanguage}&q=${encodeURIComponent(text)}`, {
-            method: 'POST'
-        });
+        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=auto|${targetLanguage}`);
         const data = await response.json();
-        return data.data.translations[0].translatedText;
+        return data.responseData.translatedText;
     }
 });
